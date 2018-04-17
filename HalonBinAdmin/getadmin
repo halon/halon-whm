@@ -1,0 +1,45 @@
+#!/usr/local/cpanel/3rdparty/bin/perl
+
+use strict; 
+use Cpanel::AdminBin::Serializer ();
+use Cpanel::Logger               ();
+use Cpanel::PwCache              ();
+
+my $stdin = <STDIN>;
+chomp $stdin;
+my ($uid,$function,$data) = split (/ /,$stdin,3);
+# sanitize the input; in this case, only alphanumeric, underscore, space, period, and exclamation are allowed
+$data =~ s/![\w \.\!]//g;   
+
+####
+#   FUNCTIONS BELOW ARE REQUIRED FOR FRAMEWORK INTERNAL PROCESES!
+#   DO NOT REMOVE!!!
+####
+if ($function eq 'getConfiguration') {
+        my $filename = "/usr/local/cpanel/etc/Halon.ini";
+        my $data     = ""; 
+        open (TEMP, $filename);
+        while (my $record = <TEMP>) {
+            $data .= $record;
+         }
+        close (TEMP);
+        print($data);
+        exit(0);
+}
+
+if ($function eq 'getAccessHash') {
+        my $filename = "/root/.halon_tokenapi";
+        my $data     = ""; 
+        open (TEMP, $filename);
+        while (my $record = <TEMP>) {
+            $data .= $record;
+         }
+        close (TEMP);
+        print($data);
+        exit(0);
+}
+####
+#
+####
+
+# YOU CAN ADD YOUR CUSTOM ADMIN FUNCTIONS BELOW:

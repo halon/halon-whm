@@ -1,0 +1,289 @@
+#!/bin/bash
+
+#DB Config
+dbHost="127.0.0.1";
+dbName="HalonData";
+dbUserName="Halon";
+dbPassword=`< /dev/urandom tr -dc _A-Z-a-z-0-9 | head -c${1:-32};echo;`
+
+#Config File
+configFile='/usr/local/cpanel/etc/Halon.ini';
+
+declare -a copyFiles=(
+    'HalonWHM' '/usr/local/cpanel/whostmgr/docroot/cgi/Halon'
+    'HalonIncludes' '/usr/local/cpanel/share/Halon'
+    'HalonBinAdmin' '/usr/local/cpanel/bin/admin/Halon'
+    'HalonCPanelAPI' '/usr/local/cpanel/Cpanel/API/'
+)
+
+declare -a chmodFiles=(
+    '/usr/local/cpanel/logs/Halon' '722'
+    '/usr/local/cpanel/whostmgr/docroot/cgi/Halon' '755'
+    '/usr/local/cpanel/bin/admin/Halon' '644'
+    '/usr/local/cpanel/bin/admin/Halon/getadmin' '755'
+    '/usr/local/cpanel/whostmgr/docroot/cgi/Halon/hooks.php' '755'
+)
+
+# Detect paths
+MYSQL=$(which mysql)
+CurrentDIR=${PWD}
+
+if [ -f  "$configFile" ]
+then
+    installed=1;
+    dbHost=`cat $configFile|grep "db_host"|cut -d'=' -f2 |tr -d '\r'| cut -d "'" -f 2`;
+    dbName=`cat $configFile|grep "db_name"|cut -d'=' -f2 |tr -d '\r'| cut -d "'" -f 2`;
+    dbUserName=`cat $configFile|grep "db_user"|cut -d'=' -f2 |tr -d '\r'| cut -d "'" -f 2`;
+    dbPassword=`cat $configFile|grep "db_pass"|cut -d'=' -f2 |tr -d '\r'| cut -d "'" -f 2`;
+fi;
+
+if [ "$installed" = "1" ]
+then
+    echo -n "
+Select Action:
+    1 - Update Plugin
+    2 - Uninstall Plugin
+:";
+    read option;
+    case "$option" in
+        "1") action='update'; actionLBL='Update Plugin' ;;
+        "2") action='uninstall'; actionLBL='Uninstall Plugin' ;;
+    esac;
+else
+    actionLBL='Install Plugin';
+    action='install';
+fi;
+
+if [[ -z "$action" ]]
+then
+    echo "Exiting";
+    exit;
+fi;
+
+
+echo -n "Are you sure you want to $action ? (yes/no):";
+
+read selected;
+
+if [[ "$selected" != "yes" ]]
+then
+    echo "Exiting";
+    exit;
+fi;
+
+data=`$MYSQL -h "$dbHost" -u 'root' -e 'SHOW Databases;'`;
+
+if [ ! "$?" -eq 0 ]
+then
+    echo -n "Please provide MySQL admin username [root]";
+    read $mysqlRootUser;
+
+    echo -n "Please provide MySQL admin password";
+    read $mysqlRootPassword;
+fi;
+
+case "$action" in
+    "install")
+            SQL="create database $dbName;CREATE USER $dbUserName@localhost IDENTIFIED BY '$dbPassword';GRANT ALL ON $dbName.* TO $dbUserName@localhost;";
+            if [ -z "$mysqlRootPassword" ]
+            then
+                $MYSQL -h "$dbHost" -u root -e "$SQL"
+                $MYSQL -h "$dbHost" -u root "$dbName" < ./InstallFiles/install.sql
+            else
+                $MYSQL -h "$dbHost" -u "$dbUserName" --password="$dbPassword" "$dbName" -e "$SQL"
+                $MYSQL -h "$dbHost" -u "$dbUserName" --password="$dbPassword" "$dbName" < ./InstallFiles/install.sql
+            fi;
+
+            echo "
+            db_host='$dbHost'
+            db_user='$dbUserName'
+            db_name='$dbName'
+            db_pass='$dbPassword'
+            " > "$configFile"
+
+            chmod 600 "$configFile"
+
+            for dir in "${copyFiles[@]}"
+            do
+                if([[ -z "$source" ]])
+                then
+                    source=$dir;
+                else
+                    if [ ! -d "$dir" ]
+                    then
+                        mkdir "$dir"
+                    fi;
+                    cp -fR "$CurrentDIR/$source/." "$dir"
+                    source='';
+                fi;
+            done
+
+            source='';
+            for dir in "${chmodFiles[@]}"
+            do
+                if([[ -z "$source" ]])
+                then
+                    source=$dir;
+                else
+                    if [[ ! -d "$source" && ! -f "$source" ]]
+                    then
+                        mkdir "$source"
+                    fi;
+                    chmod -R "$dir" "$source"
+                    source='';
+                fi;
+            done
+
+            echo -n "Generating token for the WHM API.."
+            whmapi1 api_token_revoke token_name-1=HalonModule > /dev/null
+            whmapi1 api_token_create token_name=HalonModule > /root/.halon_tokenapi
+            chmod 664 /root/.halon_tokenapi
+            IN=`cat /root/.halon_tokenapi | grep "token"`
+            SUBSTRING=$(echo $IN| cut -d' ' -f 2)
+            if [ ! -e "/usr/local/cpanel/Cpanel/Halon/" ]
+            then
+                mkdir /usr/local/cpanel/Cpanel/Halon/
+            fi;
+			
+            echo $SUBSTRING > /usr/local/cpanel/Cpanel/Halon/.halon_tokenapi
+            chmod 660 /usr/local/cpanel/Cpanel/Halon/.halon_tokenapi
+
+            if [ -e "$CurrentDIR/InstallFiles/HalonIcon.png" ]
+            then
+                cp "$CurrentDIR/InstallFiles/HalonIcon.png" /usr/local/cpanel/whostmgr/docroot/addon_plugins
+            fi;
+
+            if [ -e "$CurrentDIR/InstallFiles/HalonWHMPlugin.conf" ]
+            then
+                /usr/local/cpanel/bin/register_appconfig "$CurrentDIR/InstallFiles/HalonWHMPlugin.conf"
+            fi;
+
+            eval "/usr/local/cpanel/bin/manage_hooks add script /usr/local/cpanel/whostmgr/docroot/cgi/Halon/hooks.php --manual --category Whostmgr --event 'Accounts::Create' --stage post --action='--createaccount'"
+            eval "/usr/local/cpanel/bin/manage_hooks add script /usr/local/cpanel/whostmgr/docroot/cgi/Halon/hooks.php --manual --category Whostmgr --event 'Domain::park' --stage post --action='--parkdomain'"
+            eval "/usr/local/cpanel/bin/manage_hooks add script /usr/local/cpanel/whostmgr/docroot/cgi/Halon/hooks.php --manual --category Whostmgr --event 'ParkAdmin::park' --stage post --action='--parkdomainadmin'"
+            eval "/usr/local/cpanel/bin/manage_hooks add script /usr/local/cpanel/whostmgr/docroot/cgi/Halon/hooks.php --manual --category Cpanel --event 'Api2::AddonDomain::addaddondomain' --stage post --action='--addaddondomain'"
+
+    ;;
+    "uninstall")
+        SQL="DROP DATABASE $dbName; DROP USER $dbUserName@localhost;"
+
+        if [ -z "$mysqlRootPassword" ]
+        then
+            $MYSQL -h "$dbHost" -u root -e "$SQL"
+        else
+            $MYSQL -h "$dbHost" -u '"$dbUserName"' --password="$dbPassword" -e "$SQL"
+        fi;
+
+        eval "/usr/local/cpanel/bin/manage_hooks delete script /usr/local/cpanel/whostmgr/docroot/cgi/Halon/hooks.php --manual --category Whostmgr --event 'Accounts::Create' --stage post --action='--createaccount'"
+        eval "/usr/local/cpanel/bin/manage_hooks delete script /usr/local/cpanel/whostmgr/docroot/cgi/Halon/hooks.php --manual --category Whostmgr --event 'Domain::park' --stage post --action='--parkdomain'"
+        eval "/usr/local/cpanel/bin/manage_hooks delete script /usr/local/cpanel/whostmgr/docroot/cgi/Halon/hooks.php --manual --category Whostmgr --event 'ParkAdmin::park' --stage post --action='--parkdomainadmin'"
+        eval "/usr/local/cpanel/bin/manage_hooks delete script /usr/local/cpanel/whostmgr/docroot/cgi/Halon/hooks.php --manual --category Cpanel --event 'Api2::AddonDomain::addaddondomain' --stage post --action='--addaddondomain'"
+
+        for dir in "${copyFiles[@]}"
+        do
+            if([[ -z "$source" ]])
+            then
+                source=$dir;
+            else
+                if [ -d "$dir" ]
+                then
+                    if [ "$dir" == "/usr/local/cpanel/Cpanel/API/" ]
+                    then
+                        if [ -f "/usr/local/cpanel/Cpanel/API/Halon.pm" ]
+                        then
+                            rm -f /usr/local/cpanel/Cpanel/API/Halon.pm
+                        fi;
+                    elif [ -d "$dir" ] && [ "$dir" != "/usr/local/cpanel/Cpanel/API/" ]
+                    then
+                        rm -rf "$dir"
+                    fi;
+                fi;
+                source='';
+            fi;
+        done
+
+        rm "$configFile";
+
+        if [ -e "$CurrentDIR/InstallFiles/HalonWHMPlugin.conf" ]
+        then
+            /usr/local/cpanel/bin/unregister_appconfig "$CurrentDIR/InstallFiles/HalonWHMPlugin.conf"
+        fi;
+
+        echo "Removing module in cPanel x3 theme..."
+        if [ -e "$CurrentDIR/InstallFiles/Halon.cpanelplugin" ]
+        then
+            cp "$CurrentDIR/InstallFiles/Halon.cpanelplugin" /tmp/Halon.cpanelplugin
+            cat "$CurrentDIR/InstallFiles/HalonIcon.png" | base64 >> /tmp/Halon.cpanelplugin
+            /usr/local/cpanel/bin/unregister_cpanelplugin /tmp/Halon.cpanelplugin
+            rm -f /tmp/Halon.cpanelplugin
+        fi;
+
+        if [ -e "/usr/local/cpanel/base/frontend/x3/dynamicui/dynamicui_Halon.conf" ]
+        then
+            rm -f /usr/local/cpanel/base/frontend/x3/dynamicui/dynamicui_Halon.conf
+        fi;
+
+        echo "Removing module in cPanel paper_lanter theme..."
+        if [ -e "/usr/local/cpanel/base/frontend/paper_lantern/dynamicui/dynamicui_Halon.conf" ]
+        then
+            rm -f /usr/local/cpanel/base/frontend/paper_lantern/dynamicui/dynamicui_Halon.conf
+        fi;
+    ;;
+    "update")
+        $MYSQL -h "$dbHost" -u "$dbUserName" --password="$dbPassword" "$dbName" < ./InstallFiles/install.sql
+
+        for dir in "${copyFiles[@]}"
+        do
+            if([[ -z "$source" ]])
+            then
+                source=$dir;
+            else
+                if [ ! -d "$dir" ]
+                then
+                    mkdir "$dir"
+                fi;
+                cp -fR "$CurrentDIR/$source/." "$dir"
+                source='';
+            fi;
+        done
+
+        source='';
+        for dir in "${chmodFiles[@]}"
+        do
+            if([[ -z "$source" ]])
+            then
+                source=$dir;
+            else
+                if [[ ! -d "$source" && ! -f "$source" ]]
+                then
+                    mkdir "$source"
+                fi;
+                chmod -R "$dir" "$source"
+                source='';
+            fi;
+        done
+
+        if [ -e "$CurrentDIR/InstallFiles/HalonWHMPlugin.conf" ]
+        then
+            /usr/local/cpanel/bin/register_appconfig "$CurrentDIR/InstallFiles/HalonWHMPlugin.conf"
+        fi;
+
+        if [ -e "$CurrentDIR/InstallFiles/Halon.cpanelplugin" ]
+        then
+            cp "$CurrentDIR/InstallFiles/Halon.cpanelplugin" /tmp/Halon.cpanelplugin
+            cat "$CurrentDIR/InstallFiles/HalonIcon.png" | base64 >> /tmp/Halon.cpanelplugin
+            /usr/local/cpanel/bin/register_cpanelplugin /tmp/Halon.cpanelplugin
+            rm -f /tmp/Halon.cpanelplugin
+        fi;
+
+        if [ -e "$CurrentDIR/InstallFiles/install.json" ]
+        then 
+            tar -C "$CurrentDIR/InstallFiles/" -cvjf /tmp/Halon.tar.bz2 install.json HalonIcon.png
+            /usr/local/cpanel/scripts/install_plugin /tmp/Halon.tar.bz2
+            rm -f /tmp/Halon.tar.bz2
+        fi;
+       
+    ;;
+esac;
+
+echo "Action: $actionLBL finished successfull";

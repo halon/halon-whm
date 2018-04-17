@@ -1,0 +1,12 @@
+[
+    {
+       "icon": "",
+       "group_id" : "security",
+       "order"  : 1,
+       "name"   : "Halon",
+       "type"   : "link",
+       "id"     : "Halon",
+       "uri"    : "Halon/index.live.php"
+    }
+]
+
