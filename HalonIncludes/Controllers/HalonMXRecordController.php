@@ -55,7 +55,7 @@ class HalonMXRecordController {
 
             $this->currentRecords = HalonDriver::localAPI()->getZoneRecords($this->username, $this->domain);
             if(!$this->checkIfDefault()) {
-                throw new Exception("This domain has got custom MX records.");
+                throw new Exception("This domain has custom MX records.");
             }
 
             $this->backupMxRecords(); 

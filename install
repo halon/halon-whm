@@ -223,7 +223,7 @@ case "$action" in
             rm -f /usr/local/cpanel/base/frontend/x3/dynamicui/dynamicui_Halon.conf
         fi;
 
-        echo "Removing module in cPanel paper_lanter theme..."
+        echo "Removing module in cPanel paper_lantern theme..."
         if [ -e "/usr/local/cpanel/base/frontend/paper_lantern/dynamicui/dynamicui_Halon.conf" ]
         then
             rm -f /usr/local/cpanel/base/frontend/paper_lantern/dynamicui/dynamicui_Halon.conf
@@ -286,4 +286,4 @@ case "$action" in
     ;;
 esac;
 
-echo "Action: $actionLBL finished successfull";
+echo "Action: $actionLBL finished successfully";
