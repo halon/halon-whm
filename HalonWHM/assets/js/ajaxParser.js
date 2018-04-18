@@ -39,7 +39,7 @@ var ajaxParser = {
                 jQuery('#MGLoader').loader('hide');
             }
             
-            var start = json.indexOf(this.startString);            
+            var start = json.indexOf(this.startString);
             json = json.substr(start+this.startString.length,json.indexOf(this.stopString)-start-this.startString.length);
                                
             try{

@@ -1,6 +1,6 @@
 <?php
 
-abstract class AbstractConfigDriver{    
+abstract class AbstractConfigDriver{
     protected $values;
 
     abstract public function __construct($params);

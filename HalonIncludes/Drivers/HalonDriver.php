@@ -1,7 +1,7 @@
 <?php
 
 class HalonDriver{
-    static private $_instances = array();    
+    static private $_instances = array();
     private function __construct() {;}
     private function __clone() {;}
 

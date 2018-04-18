@@ -9,7 +9,7 @@ my $stdin = <STDIN>;
 chomp $stdin;
 my ($uid,$function,$data) = split (/ /,$stdin,3);
 # sanitize the input; in this case, only alphanumeric, underscore, space, period, and exclamation are allowed
-$data =~ s/![\w \.\!]//g;   
+$data =~ s/![\w \.\!]//g;
 
 ####
 #   FUNCTIONS BELOW ARE REQUIRED FOR FRAMEWORK INTERNAL PROCESES!
@@ -17,7 +17,7 @@ $data =~ s/![\w \.\!]//g;
 ####
 if ($function eq 'getConfiguration') {
         my $filename = "/usr/local/cpanel/etc/Halon.ini";
-        my $data     = ""; 
+        my $data     = "";
         open (TEMP, $filename);
         while (my $record = <TEMP>) {
             $data .= $record;
@@ -29,7 +29,7 @@ if ($function eq 'getConfiguration') {
 
 if ($function eq 'getAccessHash') {
         my $filename = "/root/.halon_tokenapi";
-        my $data     = ""; 
+        my $data     = "";
         open (TEMP, $filename);
         while (my $record = <TEMP>) {
             $data .= $record;

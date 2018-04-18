@@ -36,7 +36,7 @@
                 <td><a href="index.php?page=ErrorList&action=SearchToken&tokenID=<?php echo $data['token']; ?>">#<?php echo $data['token']; ?></a> <?php echo $data['message']; ?> <span class="label label-primary pull-right"><?php echo $data['date']; ?></span></td>
             </tr>
             <?php endforeach; ?>
-        </table>    
+        </table>
     <?php endif; ?>
 </div>
 

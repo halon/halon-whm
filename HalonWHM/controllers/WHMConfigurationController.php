@@ -71,6 +71,6 @@ class WHMConfigurationController extends AbstractControler {
                 $data['error'] = $e->getMessage();
             }
         }
-        return $this->MainHTMLAction($input, $data);    
+        return $this->MainHTMLAction($input, $data);
     }
 }

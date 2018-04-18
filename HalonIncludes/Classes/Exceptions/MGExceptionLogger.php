@@ -48,12 +48,12 @@ class MGExceptionLogger{
     static function getErrorByToken($token)
     {
         $result = MGMySQL::select(array(
-           'token'    
-           ,'date'      
-           ,'message'   
-           ,'debug'     
-           ,'code'     
-           ,'type'      
+           'token'
+           ,'date'
+           ,'message'
+           ,'debug'
+           ,'code'
+           ,'type'
         )
         ,'error_logs'
         ,array(
@@ -68,7 +68,7 @@ class MGExceptionLogger{
     
     static function listErrorTokens($sortby = array()){
         $result = MGMySQL::select(array(
-           'token'    
+           'token'
             ,'message'
             ,'date'
         )

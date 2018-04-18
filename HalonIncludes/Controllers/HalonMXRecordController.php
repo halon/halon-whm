@@ -109,7 +109,7 @@ class HalonMXRecordController {
     }
     
     public function getCurrentSpfRecordLine() {
-        $currentSpf = HalonDriver::localAPI()->getSpfRecords($this->username, $this->domain); 
+        $currentSpf = HalonDriver::localAPI()->getSpfRecords($this->username, $this->domain);
         foreach($currentSpf as $record) {
             if(strpos($record['record'], "v=spf") !== false) {
                 return $record['line'];
@@ -167,7 +167,7 @@ class HalonMXRecordController {
             //If there are more default records than custom records
             if(count($this->currentRecords['mxRecords']) > count($recordsToSet)) {
                 for($i = 0; $i <= count($recordsToSet) - 1; $i++) {
-                    $params = array("domain" => $this->domain, "exchange" => isset($recordsToSet[$i]['exchange'])?$recordsToSet[$i]['exchange']:$recordsToSet[$i][1], 
+                    $params = array("domain" => $this->domain, "exchange" => isset($recordsToSet[$i]['exchange'])?$recordsToSet[$i]['exchange']:$recordsToSet[$i][1],
                         "oldexchange" => $this->currentRecords['mxRecords'][$i]['exchange'],
                         "oldpreference" => $this->currentRecords['mxRecords'][$i]['preference'], 
                         "preference" => isset($recordsToSet[$i]['preference'])?$recordsToSet[$i]['preference']:$recordsToSet[$i][0]);
@@ -180,7 +180,7 @@ class HalonMXRecordController {
             else {
                 $editedRecords = array();
                 for($i = 0; $i <= count($this->currentRecords['mxRecords']) - 1; $i++) {
-                    $params = array("domain" => $this->domain, "exchange" => isset($recordsToSet[$i]['exchange'])?$recordsToSet[$i]['exchange']:$recordsToSet[$i][1], 
+                    $params = array("domain" => $this->domain, "exchange" => isset($recordsToSet[$i]['exchange'])?$recordsToSet[$i]['exchange']:$recordsToSet[$i][1],
                         "oldexchange" => $this->currentRecords['mxRecords'][$i]['exchange'],
                         "oldpreference" => $this->currentRecords['mxRecords'][$i]['preference'], 
                         "preference" => isset($recordsToSet[$i]['preference'])?$recordsToSet[$i]['preference']:$recordsToSet[$i][0]);

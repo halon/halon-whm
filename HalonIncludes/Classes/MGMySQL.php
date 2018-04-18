@@ -27,7 +27,7 @@ class MGMySQL{
             if(self::$usePDO)
             {
                 try{
-                    self::$_instance->connection[$connectionName] = new PDO("mysql:host=$hostName;dbname=$dbname", $username, $password); 
+                    self::$_instance->connection[$connectionName] = new PDO("mysql:host=$hostName;dbname=$dbname", $username, $password);
 
                     self::$_instance->connection[$connectionName]->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
                 } catch (Exception $ex) {
@@ -68,7 +68,7 @@ class MGMySQL{
 
             if(strpos($query, 'insert') !== false || strpos($query, 'INSERT')!== false )
             {
-                $id = self::$_instance->connection[$connectionName]->lastInsertId(); 
+                $id = self::$_instance->connection[$connectionName]->lastInsertId();
             }
             else
             {
@@ -312,7 +312,7 @@ class MGMySQL{
                 }
                 else
                 {
-                    $colName = ':cond'.$i;                
+                    $colName = ':cond'.$i;
                     $conditionParsed[] = "`$col` = $colName";
                     $values['cond'.$i] = $value;
                     $i++;

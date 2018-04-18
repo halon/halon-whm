@@ -85,12 +85,12 @@ class WHMDomainsController extends AbstractControler{
             
     private function orderDomains($domains, $column, $order) {
         switch($column) {
-            case 1: usort($domains, function($a, $b) { 
-                        return strcmp($a[1], $b[1]);           
+            case 1: usort($domains, function($a, $b) {
+                        return strcmp($a[1], $b[1]);
                     });
                     return ($order == "desc")?array_reverse($domains):$domains;
             case 2: usort($domains, function($a, $b) { 
-                        return strcmp($a[2], $b[2]);           
+                        return strcmp($a[2], $b[2]);
                     });
                     return ($order == "desc")?array_reverse($domains):$domains;
         }
@@ -139,7 +139,7 @@ class WHMDomainsController extends AbstractControler{
             $mxRecordsController = new HalonMXRecordController($username, $domain);
             $mxRecordsController->enableProtection();
             
-            return array("domain" => $domain, "result" => true);   
+            return array("domain" => $domain, "result" => true);
         }
         catch(Exception $e) {
             return array("domain" => $domain, "result" => $e->getMessage());
@@ -154,7 +154,7 @@ class WHMDomainsController extends AbstractControler{
             $mxRecordsController = new HalonMXRecordController($username, $domain);
             $mxRecordsController->disableProtection();
      
-            return array("domain" => $domain, "result" => true);   
+            return array("domain" => $domain, "result" => true);
         }
         catch(Exception $e) {
             return array("domain" => $domain, "result" => $e->getMessage());

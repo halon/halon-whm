@@ -5,7 +5,7 @@ class SystemException extends Exception{
     private $details;
     private $token;
 
-    function __construct($message, $code = 0, $userMessage = '', $details = '',$previous = null) {       
+    function __construct($message, $code = 0, $userMessage = '', $details = '',$previous = null) {
         parent::__construct($message, $code, $previous);
         $this->userMessage = $userMessage;
         $this->details = $details;
@@ -24,4 +24,3 @@ class SystemException extends Exception{
         return $this->token;
     }
 }
-

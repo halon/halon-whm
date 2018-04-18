@@ -17,7 +17,7 @@ class MGLang
    
    public static function getInstance ($dir = null, $lang = null)
    {
-        if (self::$instance === null) 
+        if (self::$instance === null)
         {
             self::$instance = new self();
             self::$instance->dir = $dir;

@@ -1,6 +1,6 @@
 <?php
 
-class CPanelConfigDriver extends AbstractConfigDriver{        
+class CPanelConfigDriver extends AbstractConfigDriver{
     function __construct($params) {
 
         if(!empty($params->dbConfiguration))

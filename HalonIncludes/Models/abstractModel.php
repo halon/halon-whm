@@ -5,7 +5,7 @@
  *
  * @author Michal Czech <michael@modulesgarden.com>
  */
-abstract class abstractModel {        
+abstract class abstractModel {
     static $tableDeclaration = null;
     static $fieldDeclaration = array();
     

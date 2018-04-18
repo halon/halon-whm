@@ -21,7 +21,7 @@
                 <div class="col-lg-12">
                     <div class="masthead">
                         <h1 class="text-muted"><?php echo MGLang::T('header'); ?></h1>
-                        <div class="row"></div>                 
+                        <div class="row"></div>
                         <ul class="nav nav-tabs">
                             <?php foreach ($pages as $page): ?>
                                 <li <?php if ($currentPage == $page): ?>class="nav-item active"<?php endif; ?>>
@@ -73,4 +73,3 @@
         </div>
     </body>
 </html>
-

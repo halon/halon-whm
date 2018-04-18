@@ -14,7 +14,7 @@ $("document").ready(function() {
                 serverSide: true,
                 responsive: true,
                 orderCellsTop: true,
-                autoWidth: false, 
+                autoWidth: false,
                 aaSorting: [[1,'asc']],
                 ajax: {
                     url: "ajax.php?page=Domains&action=getDomains",
@@ -57,7 +57,7 @@ $("document").ready(function() {
             });
         }
         else {
-            displayMessage("errorMessage", "You have to choose some items in order to perform bulk action");       
+            displayMessage("errorMessage", "You have to choose some items in order to perform bulk action");
         }
     });
    
@@ -82,7 +82,7 @@ $("document").ready(function() {
     $('#domains tbody').on('click', "input:checkbox[name='checkedItems']", function () {
         var status = $(this).prop("checked");
         var theSameStatus = true;
-        $("input:checkbox[name='checkedItems']").each(function() {                     
+        $("input:checkbox[name='checkedItems']").each(function() {
             if($(this).prop("checked") != status) {
                 theSameStatus = false;
             }
@@ -178,5 +178,3 @@ $("document").ready(function() {
         $("#" + elementId).hide();
     }
 });
-
-

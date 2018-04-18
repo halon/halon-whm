@@ -1,5 +1,5 @@
 <?php
 
-class exampleModel extends abstractModel{  
+class exampleModel extends abstractModel{
     
 }

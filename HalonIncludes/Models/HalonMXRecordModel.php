@@ -10,7 +10,7 @@ class HalonMXRecordModel {
     }
     
     public function saveDefaultRecords($data) {
-        $result = MGMySQL::query("INSERT INTO `{$this->table}` VALUES (:domain, :records) ON DUPLICATE KEY UPDATE mx_records = :records", 
+        $result = MGMySQL::query("INSERT INTO `{$this->table}` VALUES (:domain, :records) ON DUPLICATE KEY UPDATE mx_records = :records",
                 array("domain" => $data['domain'], "records" => $data['records']));
     }
     

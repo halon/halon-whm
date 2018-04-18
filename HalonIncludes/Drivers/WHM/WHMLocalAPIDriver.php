@@ -113,8 +113,8 @@ class WHMLocalAPIDriver extends AbstractLocalAPIDriver{
         return shell_exec('/usr/local/cpanel/3rdparty/perl/524/bin/perl /usr/local/cpanel/share/Halon/Wrapper/wrapper.pl getAccessHash');
     }
        
-    public function installCrt($account,$params) { 
-        $result = $this->_userRequest($account,'SSL','installssl',$params); 
+    public function installCrt($account,$params) {
+        $result = $this->_userRequest($account,'SSL','installssl',$params);
         return $result;
     }
     
@@ -230,7 +230,7 @@ class WHMLocalAPIDriver extends AbstractLocalAPIDriver{
                 if(substr($record['name'], 0, -1) != $domain) {
                     continue;
                 }
-                $mxRecords[] = array("exchange" => $record['exchange'], "name" => $record['name'], "record" => $record['record'], 
+                $mxRecords[] = array("exchange" => $record['exchange'], "name" => $record['name'], "record" => $record['record'],
                     "preference" => $record['preference'], "line" => $record['line']);
             }
 
