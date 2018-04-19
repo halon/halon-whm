@@ -3,6 +3,10 @@
     padding-right: 0px;
 }
 
+.container-fluid > .row {
+    margin-top: 10px;
+}
+
 #MGLoader {
     background-color: rgba(0,0,0,0.5);
     position: absolute;
