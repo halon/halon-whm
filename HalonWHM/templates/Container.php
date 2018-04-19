@@ -2,13 +2,11 @@
     require_once('/usr/local/cpanel/php/WHM.php');
     WHM::header(MGLang::T('header'), 0, 0);
 ?>
-<link rel="stylesheet" type="text/css" href="./assets/css/jquery.dataTables.css"/>
-<link rel="stylesheet" type="text/css" href="./assets/css/style.css" />
+<link rel="stylesheet" type="text/css" href="./assets/css/datatables.min.css"/>
+<link rel="stylesheet" type="text/css" href="./assets/css/style.css"/>
 <script type="text/javascript" src="./assets/js/jquery-1.11.0.min.js"></script>
-<script type="text/javascript" src="./assets/js/jquery.dataTables.js"></script>
+<script type="text/javascript" src="./assets/js/datatables.min.js"></script>
 <script type="text/javascript" src="./assets/js/ajaxParser.js"></script>
-<script type="text/javascript" src="./assets/js/dataTables.bootstrap.js"></script>
-<script type="text/javascript" src="./assets/js/jquery.dataTables.bootstrap.js"></script>
 <script type="text/javascript">
     ajaxParser.create('<?php echo $currenAjax; ?>');
 </script>
