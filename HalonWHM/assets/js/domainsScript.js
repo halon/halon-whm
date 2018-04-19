@@ -57,7 +57,7 @@ $("document").ready(function() {
             });
         }
         else {
-            displayMessage("errorMessage", "You have to choose some items in order to perform bulk action");
+            displayMessage("errorMessage", "You have to choose some items in order to perform bulk action.");
         }
     });
    
