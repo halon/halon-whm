@@ -1,5 +1,9 @@
-.container-fluid > .row{
-    margin-top:10px;
+.container-fluid {
+    padding-left: 0px;
+    padding-right: 0px;
+}
+.container-fluid > .row {
+    margin-top: 10px;
 }
 .text-muted {
     margin: 20px 0 40px 0;
