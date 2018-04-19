@@ -17,10 +17,14 @@
     z-index: 60000;
 }
 
-#MGLoader img {
+#MGLoader .panel {
     position: absolute;
     top: 50%;
     left: 50%;
     width: 300px;
     margin-left: -150px;
+}
+
+#MGLoader .progress {
+    margin-bottom: 0px;
 }

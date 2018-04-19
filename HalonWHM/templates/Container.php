@@ -62,7 +62,11 @@
     WHM::footer();
 ?>
 <div id="MGLoader" style="display: none;">
-    <div>
-        <img src="assets/images/ajax-loader.gif" alt="Loading ..."/>
+    <div class="panel panel-default">
+        <div class="panel-body">
+            <div class="progress progress-striped active">
+                <div class="progress-bar" role="progressbar" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100" style="width: 100%"></div>
+            </div>
+        </div>
     </div>
 </div>
