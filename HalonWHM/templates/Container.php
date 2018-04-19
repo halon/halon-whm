@@ -2,7 +2,6 @@
     require_once('/usr/local/cpanel/php/WHM.php');
     WHM::header(MGLang::T('header'), 0, 0);
 ?>
-<link rel="stylesheet" type="text/css" href="./assets/css/bootstrap.min.css"/>
 <link rel="stylesheet" type="text/css" href="./assets/css/justified-nav.css"/>
 <link rel="stylesheet" type="text/css" href="./assets/css/jquery.dataTables.css"/>
 <link rel="stylesheet" type="text/css" href="./assets/css/style.css" />
