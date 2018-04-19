@@ -39,8 +39,8 @@
                 data-uncheckAllText="<?php echo MGLang::T('uncheckAllItemsButtonValue'); ?>" data-status="allUnselected">
             <?php echo MGLang::T('checkAllItemsButtonValue'); ?>
         </button>
-        <button id="enableProtectionForAllDomains" class="btn btn-primary" data-type="enable"><?php echo MGLang::T('enableProtectionForAllDomainsButtonValue'); ?></button>
-        <button id="disableProtectionForAllDomains" class="btn btn-primary" data-type="disable"><?php echo MGLang::T('disableProtectionForAllDomainsButtonValue'); ?></button>
+        <button id="enableProtectionForAllDomains" class="btn btn-success" data-type="enable"><?php echo MGLang::T('enableProtectionForAllDomainsButtonValue'); ?></button>
+        <button id="disableProtectionForAllDomains" class="btn btn-danger" data-type="disable"><?php echo MGLang::T('disableProtectionForAllDomainsButtonValue'); ?></button>
     </div>
 <?php else: ?>
     <p class="noDomainsMessage"><?php echo MGLang::T('noDomainsMessage'); ?></p>
