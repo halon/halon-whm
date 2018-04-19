@@ -6,7 +6,6 @@
 <link rel="stylesheet" type="text/css" href="./assets/css/style.css" />
 <script type="text/javascript" src="./assets/js/jquery-1.11.0.min.js"></script>
 <script type="text/javascript" src="./assets/js/jquery.dataTables.js"></script>
-<script type="text/javascript" src="./assets/js/bootstrap.js"></script>
 <script type="text/javascript" src="./assets/js/ajaxParser.js"></script>
 <script type="text/javascript" src="./assets/js/dataTables.bootstrap.js"></script>
 <script type="text/javascript" src="./assets/js/jquery.dataTables.bootstrap.js"></script>
