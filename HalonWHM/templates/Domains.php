@@ -6,11 +6,11 @@
     <div class="alert alert-danger" id="errorMessage" style="display:none">
         <button type="button" class="close closeMessage" aria-label="Close"><span aria-hidden="true">&times;</span></button>
         <span class="content"></span>
-    </div> 
+    </div>
     <div class="alert alert-info" id="bulkMessage" style="display:none">
         <button type="button" class="close closeMessage" aria-label="Close"><span aria-hidden="true">&times;</span></button>
         <span class="content"></span>
-    </div> 
+    </div>
     <?php if(!empty($error)): ?>
         <div class="alert alert-danger">
             <?php echo $error; ?>
@@ -32,8 +32,8 @@
                 <?php echo MGLang::T('domainStatusColumnName'); ?>
             </td>
             <td class="col-sm-2"><?php echo MGLang::T('toggleProtectionColumnName'); ?></td>
-        </thead>   
-    </table>  
+        </thead>
+    </table>
     <div class="buttons">
         <button id="toggleItems" class="btn btn-primary" data-checkAllText="<?php echo MGLang::T('checkAllItemsButtonValue'); ?>"
                 data-uncheckAllText="<?php echo MGLang::T('uncheckAllItemsButtonValue'); ?>" data-status="allUnselected">
