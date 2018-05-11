@@ -163,6 +163,33 @@ case "$action" in
             eval "/usr/local/cpanel/bin/manage_hooks add script /usr/local/cpanel/whostmgr/docroot/cgi/Halon/hooks.php --manual --category Whostmgr --event 'ParkAdmin::park' --stage post --action='--parkdomainadmin'"
             eval "/usr/local/cpanel/bin/manage_hooks add script /usr/local/cpanel/whostmgr/docroot/cgi/Halon/hooks.php --manual --category Cpanel --event 'Api2::AddonDomain::addaddondomain' --stage post --action='--addaddondomain'"
 
+            if [ ! -e "/usr/local/cpanel/base/3rdparty/sp-enduser-cpanel" ]
+            then
+                mkdir /usr/local/cpanel/base/3rdparty/sp-enduser-cpanel
+            fi;
+
+            if [ -e "$CurrentDIR/HalonCPanel" ]
+            then
+                cp "$CurrentDIR/HalonCPanel/index.live.php" /usr/local/cpanel/base/3rdparty/sp-enduser-cpanel
+                cp "$CurrentDIR/HalonCPanel/settings.php" /usr/local/cpanel/base/3rdparty/sp-enduser-cpanel
+            fi;
+
+            if [ -e "$CurrentDIR/InstallFiles/install.json" ]
+            then
+                tar -C "$CurrentDIR/InstallFiles/" -cvjf /tmp/Halon.tar.bz2 install.json HalonIcon.png
+                /usr/local/cpanel/scripts/install_plugin /tmp/Halon.tar.bz2
+                rm -f /tmp/Halon.tar.bz2
+            fi;
+
+            if [ -e "$CurrentDIR/InstallFiles/HalonWebmailIcon.png" ]
+            then
+                cp "$CurrentDIR/InstallFiles/HalonWebmailIcon.png" /usr/local/cpanel/base/3rdparty/sp-enduser-cpanel
+            fi;
+
+            if [ -e "$CurrentDIR/InstallFiles/register.pl" ]
+            then
+                perl $CurrentDIR/InstallFiles/register.pl
+            fi;
     ;;
     "uninstall")
         SQL="DROP DATABASE $dbName; DROP USER $dbUserName@localhost;"
@@ -209,24 +236,30 @@ case "$action" in
             /usr/local/cpanel/bin/unregister_appconfig "$CurrentDIR/InstallFiles/HalonWHMPlugin.conf"
         fi;
 
-        echo "Removing module in cPanel x3 theme..."
-        if [ -e "$CurrentDIR/InstallFiles/Halon.cpanelplugin" ]
+        if [ -e "/usr/local/cpanel/Cpanel/Halon/" ]
         then
-            cp "$CurrentDIR/InstallFiles/Halon.cpanelplugin" /tmp/Halon.cpanelplugin
-            cat "$CurrentDIR/InstallFiles/HalonIcon.png" | base64 >> /tmp/Halon.cpanelplugin
-            /usr/local/cpanel/bin/unregister_cpanelplugin /tmp/Halon.cpanelplugin
-            rm -f /tmp/Halon.cpanelplugin
+            rm -f /usr/local/cpanel/Cpanel/Halon/.halon_tokenapi
+            rmdir /usr/local/cpanel/Cpanel/Halon/
         fi;
 
-        if [ -e "/usr/local/cpanel/base/frontend/x3/dynamicui/dynamicui_Halon.conf" ]
+        if [ -e "$CurrentDIR/InstallFiles/install.json" ]
         then
-            rm -f /usr/local/cpanel/base/frontend/x3/dynamicui/dynamicui_Halon.conf
+            tar -C "$CurrentDIR/InstallFiles/" -cvjf /tmp/Halon.tar.bz2 install.json HalonIcon.png
+            /usr/local/cpanel/scripts/uninstall_plugin /tmp/Halon.tar.bz2
+            rm -f /tmp/Halon.tar.bz2
         fi;
 
-        echo "Removing module in cPanel paper_lantern theme..."
-        if [ -e "/usr/local/cpanel/base/frontend/paper_lantern/dynamicui/dynamicui_Halon.conf" ]
+        if [ -e "/usr/local/cpanel/base/3rdparty/sp-enduser-cpanel" ]
         then
-            rm -f /usr/local/cpanel/base/frontend/paper_lantern/dynamicui/dynamicui_Halon.conf
+            rm -f /usr/local/cpanel/base/3rdparty/sp-enduser-cpanel/index.live.php
+            rm -f /usr/local/cpanel/base/3rdparty/sp-enduser-cpanel/settings.php
+            rm -f /usr/local/cpanel/base/3rdparty/sp-enduser-cpanel/HalonWebmailIcon.png
+            rmdir /usr/local/cpanel/base/3rdparty/sp-enduser-cpanel
+        fi;
+
+        if [ -e "/var/cpanel/webmail/webmail_sp-enduser-cpanel.yaml" ]
+        then
+            rm -f /var/cpanel/webmail/webmail_sp-enduser-cpanel.yaml
         fi;
     ;;
     "update")
@@ -268,21 +301,33 @@ case "$action" in
             /usr/local/cpanel/bin/register_appconfig "$CurrentDIR/InstallFiles/HalonWHMPlugin.conf"
         fi;
 
-        if [ -e "$CurrentDIR/InstallFiles/Halon.cpanelplugin" ]
+        if [ ! -e "/usr/local/cpanel/base/3rdparty/sp-enduser-cpanel" ]
         then
-            cp "$CurrentDIR/InstallFiles/Halon.cpanelplugin" /tmp/Halon.cpanelplugin
-            cat "$CurrentDIR/InstallFiles/HalonIcon.png" | base64 >> /tmp/Halon.cpanelplugin
-            /usr/local/cpanel/bin/register_cpanelplugin /tmp/Halon.cpanelplugin
-            rm -f /tmp/Halon.cpanelplugin
+            mkdir /usr/local/cpanel/base/3rdparty/sp-enduser-cpanel
+        fi;
+
+        if [ -e "$CurrentDIR/HalonCPanel" ]
+        then
+            cp "$CurrentDIR/HalonCPanel/index.live.php" /usr/local/cpanel/base/3rdparty/sp-enduser-cpanel
+            cp "$CurrentDIR/HalonCPanel/settings.php" /usr/local/cpanel/base/3rdparty/sp-enduser-cpanel
         fi;
 
         if [ -e "$CurrentDIR/InstallFiles/install.json" ]
-        then 
+        then
             tar -C "$CurrentDIR/InstallFiles/" -cvjf /tmp/Halon.tar.bz2 install.json HalonIcon.png
             /usr/local/cpanel/scripts/install_plugin /tmp/Halon.tar.bz2
             rm -f /tmp/Halon.tar.bz2
         fi;
-       
+
+        if [ -e "$CurrentDIR/InstallFiles/HalonWebmailIcon.png" ]
+        then
+            cp "$CurrentDIR/InstallFiles/HalonWebmailIcon.png" /usr/local/cpanel/base/3rdparty/sp-enduser-cpanel
+        fi;
+
+        if [ -e "$CurrentDIR/InstallFiles/register.pl" ]
+        then
+            perl $CurrentDIR/InstallFiles/register.pl
+        fi;
     ;;
 esac;
 

@@ -1,12 +1,10 @@
-[
-    {
-       "icon": "",
-       "group_id" : "security",
-       "order"  : 1,
-       "name"   : "Halon",
-       "type"   : "link",
-       "id"     : "Halon",
-       "uri"    : "Halon/index.live.php"
-    }
-]
-
+{
+	"icon" : "HalonIcon.png",
+	"group_id" : "email",
+	"order" : 10000,
+	"name" : "Halon Anti-spam",
+	"type" : "link",
+	"id" : "sp-enduser-cpanel",
+	"uri" : "/3rdparty/sp-enduser-cpanel/index.live.php",
+	"target" : "_blank"
+}
