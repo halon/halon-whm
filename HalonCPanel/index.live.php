@@ -5,7 +5,10 @@ if (!isset($_GET['timezone']))
 	die('<script>window.location.href = "?timezone=" + new Date().getTimezoneOffset();</script>');
 
 require_once '/usr/local/cpanel/php/cpanel.php';
-require_once 'settings.php';
+require_once '/usr/local/cpanel/share/Halon/HalonLoader.php';
+
+$Main = new HalonMainController('CPanel',__DIR__);
+$settings = $Main->getEnduserSettings();
 
 $cpanel = new CPANEL();
 
@@ -30,14 +33,14 @@ else {
 	$access = array('mail' => $addresses);
 }
 
-$enduser = $settings['enduser'];
+$enduser = $settings['enduserUrl'];
 if (substr($enduser, -1) == '/')
 	$enduser = substr($enduser, 0, -1);
 
 $get = http_build_query(
 	array(
 		'username' => $_SERVER['REMOTE_USER'],
-		'api-key' => $settings['api-key'],
+		'api-key' => $settings['enduserApiKey'],
 		'timezone' => $timezone
 	)
 );

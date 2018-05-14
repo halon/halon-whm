@@ -16,6 +16,8 @@ $_LANG['Configuration']['saveSuccess'] = 'Configuration has been saved successfu
 $_LANG['Configuration']['configurationForm']['customMxRecords']['label'] = 'Custom MX Records';
 $_LANG['Configuration']['configurationForm']['spfHostname']['label'] = 'SPF Hostname';
 $_LANG['Configuration']['configurationForm']['enableProtectionForNewDomains']['label'] = 'Enable Protection For Newly Created Domains';
+$_LANG['Configuration']['configurationForm']['enduserUrl']['label'] = 'Enduser URL';
+$_LANG['Configuration']['configurationForm']['enduserApiKey']['label'] = 'Enduser API Key';
 $_LANG['Configuration']['configurationForm']['customMxRecords']['description'] = 'One record per line, including priority and destination: 10 example.com';
 $_LANG['Configuration']['configurationForm']['submitSave']['label'] = 'Save';
 

@@ -114,7 +114,25 @@ class HalonMainController extends AbstractControler{
             return $e->getMessage();
         }
     }
-            
+
+    public function getEnduserSettings() {
+        try {
+            $this->dbConfiguration = HalonDriver::localAPI()->getDatabaseConfiguration();
+            $this->prepare();
+            $configurationController = new HalonConfigurationController();
+            $configuration = $configurationController->getModuleConfiguration();
+            $enduserConfiguration = [];
+            if (isset($configuration['enduserUrl']))
+                $enduserConfiguration['enduserUrl'] = $configuration['enduserUrl'];
+            if (isset($configuration['enduserApiKey']))
+                $enduserConfiguration['enduserApiKey'] = $configuration['enduserApiKey'];
+            return $enduserConfiguration;
+        }
+        catch(Exception $e) {
+            return $e->getMessage();
+        }
+    }
+
     private function prepare() {
        $configClass     = $this->type.'ConfigDriver';
         

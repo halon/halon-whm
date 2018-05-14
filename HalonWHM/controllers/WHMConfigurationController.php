@@ -34,7 +34,17 @@ class WHMConfigurationController extends AbstractControler {
            ,'value'         => (isset($currentConfiguration['enableProtectionForNewDomains']))?($currentConfiguration['enableProtectionForNewDomains'] == "on"?1:0):0
            ,'frendlyName'   => 'enableProtectionForNewDomains'
         ));
-        
+
+        $form->addField('Text', array(
+            'name'  => 'enduserUrl',
+            'value' => (isset($input['action'])&&$input['action'] == 'save'&&isset($data['error'])&&!empty($data['error']))?$input['configurationForm_enduserUrl']:(isset($currentConfiguration['enduserUrl'])?$currentConfiguration['enduserUrl']:"")
+        ));
+
+        $form->addField('Text', array(
+            'name'  => 'enduserApiKey',
+            'value' => (isset($input['action'])&&$input['action'] == 'save'&&isset($data['error'])&&!empty($data['error']))?$input['configurationForm_enduserApiKey']:(isset($currentConfiguration['enduserApiKey'])?$currentConfiguration['enduserApiKey']:"")
+        ));
+
        $form->addField('Submit', array(
            'name'           => 'action'
            ,'value'         => 'save'
@@ -60,8 +70,13 @@ class WHMConfigurationController extends AbstractControler {
     
     public function saveHTMLAction($input, $data = array()) {
         if(isset($input['action'])&&$input['action'] == "save") {
-            $data = array("customMxRecords" => $input['configurationForm_customMxRecords'], "spfHostname" => $input['configurationForm_spfHostname'],
-                "enableProtectionForNewDomains" => isset($input['configurationForm_enableProtectionForNewDomains'])?"on":"off");
+            $data = array(
+                "customMxRecords" => $input['configurationForm_customMxRecords'],
+                "spfHostname" => $input['configurationForm_spfHostname'],
+                "enduserUrl" => $input['configurationForm_enduserUrl'],
+                "enduserApiKey" => $input['configurationForm_enduserApiKey'],
+                "enableProtectionForNewDomains" => isset($input['configurationForm_enableProtectionForNewDomains'])?"on":"off"
+            );
             try {
                 $configurationController = new HalonConfigurationController();
                 $result = $configurationController->saveModuleConfiguration($data);
