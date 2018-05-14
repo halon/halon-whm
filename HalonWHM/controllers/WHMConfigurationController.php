@@ -74,9 +74,11 @@ class WHMConfigurationController extends AbstractControler {
                 "customMxRecords" => $input['configurationForm_customMxRecords'],
                 "spfHostname" => $input['configurationForm_spfHostname'],
                 "enduserUrl" => $input['configurationForm_enduserUrl'],
-                "enduserApiKey" => $input['configurationForm_enduserApiKey'],
                 "enableProtectionForNewDomains" => isset($input['configurationForm_enableProtectionForNewDomains'])?"on":"off"
             );
+            if ($input['configurationForm_enduserApiKey'] === '' || preg_match('/[^*]/', $input['configurationForm_enduserApiKey'])) {
+                $data['enduserApiKey'] = $input['configurationForm_enduserApiKey'];
+            }
             try {
                 $configurationController = new HalonConfigurationController();
                 $result = $configurationController->saveModuleConfiguration($data);

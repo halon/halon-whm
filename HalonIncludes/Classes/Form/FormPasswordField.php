@@ -10,7 +10,7 @@ class FormPasswordField extends FormAbstractField{
         $num = strlen($this->value);
         $this->value = '';
 
-        for($i=0;$i<=$num;$i++)
+        for($i=0;$i<$num;$i++)
         {
             $this->value .= '*';
         }
