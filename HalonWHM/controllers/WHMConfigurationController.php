@@ -40,7 +40,7 @@ class WHMConfigurationController extends AbstractControler {
             'value' => (isset($input['action'])&&$input['action'] == 'save'&&isset($data['error'])&&!empty($data['error']))?$input['configurationForm_enduserUrl']:(isset($currentConfiguration['enduserUrl'])?$currentConfiguration['enduserUrl']:"")
         ));
 
-        $form->addField('Text', array(
+        $form->addField('Password', array(
             'name'  => 'enduserApiKey',
             'value' => (isset($input['action'])&&$input['action'] == 'save'&&isset($data['error'])&&!empty($data['error']))?$input['configurationForm_enduserApiKey']:(isset($currentConfiguration['enduserApiKey'])?$currentConfiguration['enduserApiKey']:"")
         ));
