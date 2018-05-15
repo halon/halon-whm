@@ -171,7 +171,6 @@ case "$action" in
         if [ -e "$CurrentDIR/HalonCPanel" ]
         then
             cp "$CurrentDIR/HalonCPanel/index.live.php" /usr/local/cpanel/base/3rdparty/sp-enduser-cpanel
-            cp "$CurrentDIR/HalonCPanel/settings.php" /usr/local/cpanel/base/3rdparty/sp-enduser-cpanel
         fi;
 
         if [ -e "$CurrentDIR/InstallFiles/install.json" ]
@@ -252,7 +251,6 @@ case "$action" in
         if [ -e "/usr/local/cpanel/base/3rdparty/sp-enduser-cpanel" ]
         then
             rm -f /usr/local/cpanel/base/3rdparty/sp-enduser-cpanel/index.live.php
-            rm -f /usr/local/cpanel/base/3rdparty/sp-enduser-cpanel/settings.php
             rm -f /usr/local/cpanel/base/3rdparty/sp-enduser-cpanel/HalonWebmailIcon.png
             rmdir /usr/local/cpanel/base/3rdparty/sp-enduser-cpanel
         fi;
@@ -309,7 +307,6 @@ case "$action" in
         if [ -e "$CurrentDIR/HalonCPanel" ]
         then
             cp "$CurrentDIR/HalonCPanel/index.live.php" /usr/local/cpanel/base/3rdparty/sp-enduser-cpanel
-            cp "$CurrentDIR/HalonCPanel/settings.php" /usr/local/cpanel/base/3rdparty/sp-enduser-cpanel
         fi;
 
         if [ -e "$CurrentDIR/InstallFiles/install.json" ]
