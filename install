@@ -159,9 +159,10 @@ case "$action" in
         fi;
 
         eval "/usr/local/cpanel/bin/manage_hooks add script /usr/local/cpanel/whostmgr/docroot/cgi/Halon/hooks.php --manual --category Whostmgr --event 'Accounts::Create' --stage post --action='--createaccount'"
-        eval "/usr/local/cpanel/bin/manage_hooks add script /usr/local/cpanel/whostmgr/docroot/cgi/Halon/hooks.php --manual --category Whostmgr --event 'Domain::park' --stage post --action='--parkdomain'"
-        eval "/usr/local/cpanel/bin/manage_hooks add script /usr/local/cpanel/whostmgr/docroot/cgi/Halon/hooks.php --manual --category Whostmgr --event 'ParkAdmin::park' --stage post --action='--parkdomainadmin'"
+        eval "/usr/local/cpanel/bin/manage_hooks add script /usr/local/cpanel/whostmgr/docroot/cgi/Halon/hooks.php --manual --category Cpanel --event 'Api1::Park::park' --stage post --action='--park1'"
         eval "/usr/local/cpanel/bin/manage_hooks add script /usr/local/cpanel/whostmgr/docroot/cgi/Halon/hooks.php --manual --category Cpanel --event 'Api2::AddonDomain::addaddondomain' --stage post --action='--addaddondomain'"
+        eval "/usr/local/cpanel/bin/manage_hooks add script /usr/local/cpanel/whostmgr/docroot/cgi/Halon/hooks.php --manual --category Cpanel --event 'Api2::Park::unpark' --stage post --action='--unpark'"
+        eval "/usr/local/cpanel/bin/manage_hooks add script /usr/local/cpanel/whostmgr/docroot/cgi/Halon/hooks.php --manual --category Whostmgr --event 'Accounts::Remove' --stage pre --action='--terminate'"
 
         if [ ! -e "/usr/local/cpanel/base/3rdparty/sp-enduser-cpanel" ]
         then
@@ -201,9 +202,10 @@ case "$action" in
         fi;
 
         eval "/usr/local/cpanel/bin/manage_hooks delete script /usr/local/cpanel/whostmgr/docroot/cgi/Halon/hooks.php --manual --category Whostmgr --event 'Accounts::Create' --stage post --action='--createaccount'"
-        eval "/usr/local/cpanel/bin/manage_hooks delete script /usr/local/cpanel/whostmgr/docroot/cgi/Halon/hooks.php --manual --category Whostmgr --event 'Domain::park' --stage post --action='--parkdomain'"
-        eval "/usr/local/cpanel/bin/manage_hooks delete script /usr/local/cpanel/whostmgr/docroot/cgi/Halon/hooks.php --manual --category Whostmgr --event 'ParkAdmin::park' --stage post --action='--parkdomainadmin'"
+        eval "/usr/local/cpanel/bin/manage_hooks delete script /usr/local/cpanel/whostmgr/docroot/cgi/Halon/hooks.php --manual --category Cpanel --event 'Api1::Park::park' --stage post --action='--park1'"
         eval "/usr/local/cpanel/bin/manage_hooks delete script /usr/local/cpanel/whostmgr/docroot/cgi/Halon/hooks.php --manual --category Cpanel --event 'Api2::AddonDomain::addaddondomain' --stage post --action='--addaddondomain'"
+        eval "/usr/local/cpanel/bin/manage_hooks delete script /usr/local/cpanel/whostmgr/docroot/cgi/Halon/hooks.php --manual --category Cpanel --event 'Api2::Park::unpark' --stage post --action='--unpark'"
+        eval "/usr/local/cpanel/bin/manage_hooks delete script /usr/local/cpanel/whostmgr/docroot/cgi/Halon/hooks.php --manual --category Whostmgr --event 'Accounts::Remove' --stage pre --action='--terminate'"
 
         for dir in "${copyFiles[@]}"
         do

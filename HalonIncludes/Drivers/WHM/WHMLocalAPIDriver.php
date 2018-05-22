@@ -42,12 +42,20 @@ class WHMLocalAPIDriver extends AbstractLocalAPIDriver{
         return "";
     }
 
-    private function _request($function,array $params = array()){
+    private function _request($function,array $params = array(), $version = "0"){
         $ch = curl_init();
         
         $this->lastParams = $params;
-       
-        curl_setopt($ch, CURLOPT_URL, "http://127.0.0.1:2086/json-api/".$function.'?'.http_build_query($params));
+        if($version == "1") {
+            $url = "http://127.0.0.1:2086/json-api/".$function.'?api.version=1';
+            if(!empty($params)) {
+                $url .= "&".http_build_query($params);
+            }
+            curl_setopt($ch, CURLOPT_URL, $url);
+        }
+        else {
+            curl_setopt($ch, CURLOPT_URL, "http://127.0.0.1:2086/json-api/".$function.'?'.http_build_query($params));
+        }
 
         curl_setopt($ch, CURLOPT_HEADER, 0);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
@@ -96,15 +104,24 @@ class WHMLocalAPIDriver extends AbstractLocalAPIDriver{
                 throw new SystemException('API ERROR',$response['cpanelresult']['event']['result'],'cpanelError',array('raw'=>$response,'last'=> $this->lastParams));
             }
         }
-        
         return $response;
     }
-    
+
+    public function checkZoneEditFeature() {
+        $result = $this->_request("get_featurelist_data", array("featurelist" => "disabled"), "1");
+        foreach($result['data']['features'] as $feature) {
+            if($feature['id'] == "zoneedit"&&$feature['value'] == "1") {
+                return true;
+            }
+        }
+        return false;
+    }
+
     function getMainDomain($account){
         $main = $this->_userRequest($account, 'DomainLookup', 'getmaindomain');
         return $main['cpanelresult']['data'][0]['main_domain'];
     }
-    
+
     public function getDatabaseConfigurationFromWrapper() {
         return shell_exec('/usr/local/cpanel/3rdparty/perl/524/bin/perl /usr/local/cpanel/share/Halon/Wrapper/wrapper.pl getConfiguration');
     }

@@ -26,7 +26,7 @@ class HalonMXRecordController {
         $model->saveDefaultRecords($data);
     }
     
-    private function removeBackupFromDatabase() {
+    public function removeBackupFromDatabase() {
         $model = new HalonMXRecordModel();
         $model->removeDefaultRecords($this->domain);
     }
@@ -57,7 +57,9 @@ class HalonMXRecordController {
             if(!$this->checkIfDefault()) {
                 throw new Exception("This domain has custom MX records.");
             }
-
+            if(!HalonDriver::localAPI()->checkZoneEditFeature()) {
+                throw new Exception("Advanced Zone Edit feature is not enabled.");
+            }
             $this->backupMxRecords(); 
             $this->editRecords($customMxRecords);
             $this->changeSpfRecord("addDirective", $spfHostname);
@@ -70,6 +72,9 @@ class HalonMXRecordController {
     
     public function disableProtection() { 
         try {
+            if(!HalonDriver::localAPI()->checkZoneEditFeature()) {
+                throw new Exception("Advanced Zone Edit feature is not enabled.");
+            }
             $defaultRecords = $this->restoreDefaultRecords();
             $this->currentRecords = HalonDriver::localAPI()->getZoneRecords($this->username, $this->domain); 
             $this->editRecords($defaultRecords['mx_records']['mxRecords']);
@@ -92,14 +97,13 @@ class HalonMXRecordController {
     
     public function checkSPFRecord($action) {
         foreach($this->currentRecords['spfRecords'] as $key => $record) {
-            if((strpos($record['record'], "v=spf") !== false)&&(((strpos($record['record'], "include") === false)&&$action == "addDirective")||
-                    $action == "removeDirective")) {
+            if((strpos($record['record'], "v=spf") !== false)) {
                 if($action == "removeDirective") {
-                    $currentLine = $this->getCurrentSpfRecordLine();
-                    if($currentLine === false) {
+                    $currentRecord = $this->getCurrentSpfRecordLine();
+                    if($currentRecord === false) {
                         throw new Exception("No SPF record to fetch.");
                     }
-                    $this->currentRecords['spfRecords'][$key]['line'] = $currentLine;
+                    $this->currentRecords['spfRecords'][$key]['line'] = $currentRecord['line'];
                 }
                 $this->currentRecords['spfRecords'][$key]['key'] = $key;
                 return $this->currentRecords['spfRecords'][$key];
@@ -109,10 +113,10 @@ class HalonMXRecordController {
     }
     
     public function getCurrentSpfRecordLine() {
-        $currentSpf = HalonDriver::localAPI()->getSpfRecords($this->username, $this->domain);
+        $currentSpf = HalonDriver::localAPI()->getSpfRecords($this->username, $this->domain); 
         foreach($currentSpf as $record) {
             if(strpos($record['record'], "v=spf") !== false) {
-                return $record['line'];
+                return $record;
             }
         }
         return false;
@@ -127,7 +131,12 @@ class HalonMXRecordController {
         try {
             $response = $this->checkSPFRecord($action);
             if(is_array($response)) {
-                $newValue = $action == "addDirective"?$this->addDirective($response['txtdata'], $spfHostname):$defaultRecords[$response['key']]['txtdata'];
+                if($action == "addDirective") {
+                    $newValue = $this->addDirective($response['txtdata'], $spfHostname);
+                }
+                else {     
+                    $newValue = $this->removeDirectiveFromDefaultSpfRecordValue($defaultRecords[$response['key']]['txtdata']);
+                }
                 $params = array("line" => $response['line'], "domain" => $this->domain, "name" => $response['name'], "type" => "TXT",
                     "txtdata" => $newValue);
                 HalonDriver::localAPI()->changeSpfRecord($this->username, $params);      
@@ -137,15 +146,46 @@ class HalonMXRecordController {
             throw new Exception($e->getMessage());
         }
     }
-    
-    private function addDirective($spfRecord, $spfHostname) {
-        $pos = strpos($spfRecord, "v=spf");
-        $i = 0;
-        while($spfRecord[$pos + strlen("v=spf") + $i] != " ") {
-            $i++;  
+
+    public function removeDirectiveFromDefaultSpfRecordValue($spfRecord) {
+        if(strpos($spfRecord, "+include:") !== false) {
+            $domain = $this->getDomainFromDirective($spfRecord, "+include:");
+            $newValue = str_replace("+include:$domain ", "", $spfRecord);
         }
-        $substr = substr($spfRecord, 0, $pos + strlen("v=spf") + $i);
-        $spfRecord = str_replace($substr, "$substr include:".$spfHostname, $spfRecord);
+        else {
+            $newValue = $spfRecord;
+        }
+        return $newValue;
+    }
+    
+    private function getDomainFromDirective($spfRecord, $directiveStartText) {
+        $pos = strpos($spfRecord, $directiveStartText) + strlen($directiveStartText);
+        $domain = "";
+        for($i = $pos; $i < strlen($spfRecord); $i++) {
+            if($spfRecord[$i] != " ") {
+                $domain .= $spfRecord[$i];
+            }
+            else {
+                break;
+            }   
+        }
+        return $domain;
+    }
+
+    public function addDirective($spfRecord, $spfHostname) {
+        if(strpos($spfRecord, "include") === false) {
+            $pos = strpos($spfRecord, "v=spf");
+            $i = 0;
+            while($spfRecord[$pos + strlen("v=spf") + $i] != " ") {
+                $i++;  
+            }
+            $substr = substr($spfRecord, 0, $pos + strlen("v=spf") + $i);
+            $spfRecord = str_replace($substr, "$substr include:".$spfHostname, $spfRecord);
+        }
+        else {
+            $domain = $this->getDomainFromDirective($spfRecord, "include:");
+            $spfRecord = str_replace("$domain", $spfHostname, $spfRecord);
+        }
         return $spfRecord;       
     }
     

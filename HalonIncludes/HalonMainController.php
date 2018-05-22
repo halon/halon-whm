@@ -85,32 +85,54 @@ class HalonMainController extends AbstractControler{
             else {  
                 $this->dbConfiguration = HalonDriver::localAPI()->getDatabaseConfiguration();
             }
-            $this->clientUsername = $data['user'];
+            $this->clientUsername = $data['username'];
             $this->prepare();
             
             return $this->{$action}($data);
         }
         catch(Exception $e) { 
-            return $e->getMessage();
+            throw new Exception($e->getMessage());
         }
     }
     
     private function getUserMainDomain($data) {
-        return HalonDriver::localAPI()->getMainDomain($data['user']);
+        return HalonDriver::localAPI()->getMainDomain($data['username']);
     }
-    
+
+    private function getUserDomains($data) {
+        return HalonDriver::localAPI()->getUserDomainsFromWrapper($data['username']);
+    }
+
     private function enableProtectionForNewDomain($data) {
         try {
             $configurationController = new HalonConfigurationController();
             $configuration = $configurationController->getModuleConfiguration(array("name" => "enableProtectionForNewDomains"));
+            $mxRecordsController = new HalonMXRecordController($data['username'], $data['domain']);
             if($configuration['enableProtectionForNewDomains'] == "on") {
-                HalonDriver::localAPI()->checkSpfStatusForUser($data['user']);
-                $mxRecordsController = new HalonMXRecordController($data['user'], $data['domain']);
+                HalonDriver::localAPI()->checkSpfStatusForUser($data['username']);
                 $mxRecordsController->enableProtection();
                 return array("domain" => $data['domain'], "result" => true);
             }
+            else {
+                $currentSpf = $mxRecordsController->getCurrentSpfRecordLine();
+                $newValue = $mxRecordsController->removeDirectiveFromDefaultSpfRecordValue($currentSpf['txtdata']);
+                $params = array("line" => $currentSpf['line'], "domain" => $data['domain'], "name" => $currentSpf['name'], "type" => "TXT",
+                    "txtdata" => $newValue);
+                HalonDriver::localAPI()->changeSpfRecord($data['username'], $params);
+            }
         }
-        catch(Exception $e) {
+        catch(\Exception $e) {
+            return $e->getMessage();
+        }
+    }
+
+    private function removeDomainFromDatabase($data) {
+        try {
+            $mxRecordController = new HalonMXRecordController("", $data['domain']);
+            $mxRecordController->removeBackupFromDatabase();
+            return array("domain" => $data['domain'], "result" => true);
+        }
+        catch(\Exception $e) {
             return $e->getMessage();
         }
     }

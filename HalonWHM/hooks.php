@@ -7,7 +7,8 @@ require_once '/usr/local/cpanel/share/Halon/HalonLoader.php';
 class HookManager {
     
     private $data;
-    private $action;
+    private $action; 
+    private $hooks = array("addingDomains" => array("createaccount", "addaddondomain", "park1"), "removingDomains" => array("domainUnpark", "terminate"));
     
     public function loadEventData($argv) {
         $this->data = json_decode($this->readEventData(), true);
@@ -25,24 +26,43 @@ class HookManager {
         return $data;
     }
     
-    public function getEventParams() {
+    public function getEventParams() { 
         switch($this->action) {
-            case "createaccount": return array("domain" => $this->data['data']['domain'], "user" => $this->data['data']['user']);
-            case "addaddondomain": return array("domain" => $this->data['data']['args']['newdomain'], "user" => $this->data['data']['user']);
-            case "parkdomain": return array("domain" => $this->data['data']['new_domain'], "user" => $this->data['data']['user']);
-          //  case "parkdomain1": return array("domain" => $this->data['data']['args'][0], "user" => $this->data['data']['user']);
-          //  case "parkdomain2": return array("domain" => $this->data['data']['args']['domain'], "user" => $this->data['data']['user']);
+            case "createaccount": return array("domain" => $this->data['data']['domain'], "username" => $this->data['data']['user']);
+            case "addaddondomain": return array("domain" => $this->data['data']['args']['newdomain'], "username" => $this->data['data']['user']);
+            case "park1": return array("domain" => $this->data['data']['args'][0], "username" => $this->data['data']['user']);
+            case "domainUnpark": return array("domain" => $this->data['data']['domain']);
+            case "terminate": return array("username" => $this->data['data']['user']);
         }
     }
     
     public function runAction($argv) {
-        $this->loadEventData($argv);
-        $params = $this->getEventParams();
-        $Main = $this->getController(); 
-        $mainDomain = $Main->runHook("getUserMainDomain", array("user" => $params['user']));
-       // if(strpos($this->data['data']['target_domain'], $mainDomain === false)||!isset($this->data['data']['target_domain'])) {
-        $response = $Main->runHook("enableProtectionForNewDomain", $params);
-     //   }
+        try {
+            $this->loadEventData($argv);
+            $params = $this->getEventParams();
+            $Main = $this->getController(); 
+            if(in_array($this->action, $this->hooks["addingDomains"])) {
+                $response = $Main->runHook("enableProtectionForNewDomain", $params);
+            }
+            else if($this->action == "terminate") {
+                if(posix_getuid() == 0) { 
+                    $userDomains = $this->getUserDomains($params['username']);
+                }
+                else {
+                    $userDomains = $Main->runHook("getUserDomains", $params);
+                }
+                foreach($userDomains as $domain) {
+                    $response = $Main->runHook("removeDomainFromDatabase", array("domain" => $domain));
+                }
+            }
+            else {
+                $response = $Main->runHook("removeDomainFromDatabase", $params);
+            }
+            echo 1;
+        }
+        catch(\Exception $e) {
+            echo $e->getMessage();
+        }
     }
     
     public function getController() {
@@ -53,6 +73,23 @@ class HookManager {
             $Main = new HalonMainController('CPanel',__DIR__);
         }
         return $Main;
+    }
+
+    public function getUserDomains($username) {
+        $content = file_get_contents("/etc/userdomains");
+        if(!$content) {
+            return false;
+        }
+        $domainsArray = explode("\n", $content);
+        $userDomains = array();
+        foreach($domainsArray as $domain) {
+            $domainName = substr($domain, 0, strpos($domain, ":"));
+            $user = trim(substr($domain, strpos($domain, ":") + 1));
+            if($username == $user) {
+                $userDomains[] = $domainName;
+            }
+        }
+        return $userDomains;    
     }
 }
 

@@ -34,12 +34,12 @@ $("document").ready(function() {
                 ]
             });
 
-        $('#domains tbody').on('click', "button[name='toggleProtection']", function () {
-            var domain = $(this).data("domain");
-            var username = $(this).data("username");
-            var type = ($(this).data("type"));
-            toggleProtection(domain, username, type);
-        });
+    $('#domains tbody').on('click', "button[name='toggleProtection']", function () {
+        var domain = $(this).data("domain");
+        var username = $(this).data("username");
+        var type = ($(this).data("type"));
+        toggleProtection(domain, username, type);
+    });
     
     $("#enableProtectionForAllDomains, #disableProtectionForAllDomains").click(function() {
         var selectedItems = getSelectedItems();
