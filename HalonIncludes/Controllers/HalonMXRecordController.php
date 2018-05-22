@@ -88,10 +88,11 @@ class HalonMXRecordController {
     }
     
     public function checkIfDefault() {
+        /*
         if((count($this->currentRecords['mxRecords']) > 1)||(count($this->currentRecords['mxRecords']) == 1&&
                 $this->currentRecords['mxRecords'][0]['exchange'] != $this->domain)) {
             return false;
-        }
+        }*/
         return true;
     } 
     
@@ -148,6 +149,7 @@ class HalonMXRecordController {
     }
 
     public function removeDirectiveFromDefaultSpfRecordValue($spfRecord) {
+        /*
         if(strpos($spfRecord, "+include:") !== false) {
             $domain = $this->getDomainFromDirective($spfRecord, "+include:");
             $newValue = str_replace("+include:$domain ", "", $spfRecord);
@@ -155,6 +157,8 @@ class HalonMXRecordController {
         else {
             $newValue = $spfRecord;
         }
+        */
+        $newValue = $spfRecord;
         return $newValue;
     }
     
@@ -173,11 +177,12 @@ class HalonMXRecordController {
     }
 
     public function addDirective($spfRecord, $spfHostname) {
+        /*
         if(strpos($spfRecord, "include") === false) {
             $pos = strpos($spfRecord, "v=spf");
             $i = 0;
             while($spfRecord[$pos + strlen("v=spf") + $i] != " ") {
-                $i++;  
+                $i++;
             }
             $substr = substr($spfRecord, 0, $pos + strlen("v=spf") + $i);
             $spfRecord = str_replace($substr, "$substr include:".$spfHostname, $spfRecord);
@@ -186,7 +191,9 @@ class HalonMXRecordController {
             $domain = $this->getDomainFromDirective($spfRecord, "include:");
             $spfRecord = str_replace("$domain", $spfHostname, $spfRecord);
         }
-        return $spfRecord;       
+        */
+        $spfRecord = substr_replace($spfRecord, "include:".$spfHostname." ", strlen("v=spf ") + 1, 0);
+        return $spfRecord;
     }
     
     private function addRecords($records) {
