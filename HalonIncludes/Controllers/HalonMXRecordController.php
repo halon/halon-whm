@@ -57,7 +57,7 @@ class HalonMXRecordController {
             if(!$this->checkIfDefault()) {
                 throw new Exception("This domain has custom MX records.");
             }
-            if(!HalonDriver::localAPI()->checkZoneEditFeature()) {
+            if((!HalonDriver::localAPI()->checkZoneEditFeature())||(!HalonDriver::localAPI()->hasFeature($this->username))) {
                 throw new Exception("Advanced Zone Edit feature is not enabled.");
             }
             $this->backupMxRecords(); 
@@ -72,7 +72,7 @@ class HalonMXRecordController {
     
     public function disableProtection() { 
         try {
-            if(!HalonDriver::localAPI()->checkZoneEditFeature()) {
+            if((!HalonDriver::localAPI()->checkZoneEditFeature())||(!HalonDriver::localAPI()->hasFeature($this->username))) {
                 throw new Exception("Advanced Zone Edit feature is not enabled.");
             }
             $defaultRecords = $this->restoreDefaultRecords();

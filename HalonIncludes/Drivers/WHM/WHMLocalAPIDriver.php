@@ -117,6 +117,14 @@ class WHMLocalAPIDriver extends AbstractLocalAPIDriver{
         return false;
     }
 
+    public function hasFeature($username) {
+        $result = $this->_request("verify_user_has_feature",array("user" => $username, "feature" => "zoneedit"), "1");
+        if($result['data']['has_feature'] == 1) {
+            return true;
+        } 
+        return false;
+    }
+
     function getMainDomain($account){
         $main = $this->_userRequest($account, 'DomainLookup', 'getmaindomain');
         return $main['cpanelresult']['data'][0]['main_domain'];
