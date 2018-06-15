@@ -1,6 +1,6 @@
 <?php
     require_once('/usr/local/cpanel/php/WHM.php');
-    WHM::header(MGLang::T('header'), 0, 0);
+    WHM::header(MGLang::T('header'), 1, 1);
 ?>
 <link rel="stylesheet" type="text/css" href="./assets/css/datatables.min.css"/>
 <link rel="stylesheet" type="text/css" href="./assets/css/style.css"/>
