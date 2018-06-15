@@ -131,11 +131,11 @@ class WHMLocalAPIDriver extends AbstractLocalAPIDriver{
     }
 
     public function getDatabaseConfigurationFromWrapper() {
-        return shell_exec('/usr/local/cpanel/3rdparty/perl/524/bin/perl /usr/local/cpanel/share/Halon/Wrapper/wrapper.pl getConfiguration');
+        return shell_exec('/usr/local/cpanel/3rdparty/bin/perl /usr/local/cpanel/share/Halon/Wrapper/wrapper.pl getConfiguration');
     }
     
     public function getAccessHashFromWrapper() {
-        return shell_exec('/usr/local/cpanel/3rdparty/perl/524/bin/perl /usr/local/cpanel/share/Halon/Wrapper/wrapper.pl getAccessHash');
+        return shell_exec('/usr/local/cpanel/3rdparty/bin/perl /usr/local/cpanel/share/Halon/Wrapper/wrapper.pl getAccessHash');
     }
        
     public function installCrt($account,$params) {
