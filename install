@@ -164,14 +164,20 @@ case "$action" in
         eval "/usr/local/cpanel/bin/manage_hooks add script /usr/local/cpanel/whostmgr/docroot/cgi/Halon/hooks.php --manual --category Cpanel --event 'Api2::Park::unpark' --stage post --action='--unpark'"
         eval "/usr/local/cpanel/bin/manage_hooks add script /usr/local/cpanel/whostmgr/docroot/cgi/Halon/hooks.php --manual --category Whostmgr --event 'Accounts::Remove' --stage pre --action='--terminate'"
 
-        if [ ! -e "/usr/local/cpanel/base/3rdparty/sp-enduser-cpanel" ]
+        if [ ! -e "/usr/local/cpanel/base/frontend/paper_lantern/sp-enduser-cpanel" ]
         then
-            mkdir /usr/local/cpanel/base/3rdparty/sp-enduser-cpanel
+            mkdir /usr/local/cpanel/base/frontend/paper_lantern/sp-enduser-cpanel
+        fi;
+
+        if [ ! -e "/usr/local/cpanel/base/webmail/paper_lantern/sp-enduser-cpanel" ]
+        then
+            mkdir /usr/local/cpanel/base/webmail/paper_lantern/sp-enduser-cpanel
         fi;
 
         if [ -e "$CurrentDIR/HalonCPanel" ]
         then
-            cp "$CurrentDIR/HalonCPanel/index.live.php" /usr/local/cpanel/base/3rdparty/sp-enduser-cpanel
+            cp "$CurrentDIR/HalonCPanel/index.live.php" /usr/local/cpanel/base/frontend/paper_lantern/sp-enduser-cpanel
+            cp "$CurrentDIR/HalonCPanel/index.live.php" /usr/local/cpanel/base/webmail/paper_lantern/sp-enduser-cpanel
         fi;
 
         if [ -e "$CurrentDIR/InstallFiles/install.json" ]
@@ -183,7 +189,8 @@ case "$action" in
 
         if [ -e "$CurrentDIR/InstallFiles/HalonWebmailIcon.png" ]
         then
-            cp "$CurrentDIR/InstallFiles/HalonWebmailIcon.png" /usr/local/cpanel/base/3rdparty/sp-enduser-cpanel
+            cp "$CurrentDIR/InstallFiles/HalonWebmailIcon.png" /usr/local/cpanel/base/frontend/paper_lantern/sp-enduser-cpanel
+            cp "$CurrentDIR/InstallFiles/HalonWebmailIcon.png" /usr/local/cpanel/base/webmail/paper_lantern/sp-enduser-cpanel
         fi;
 
         if [ -e "$CurrentDIR/InstallFiles/register.pl" ]
@@ -250,11 +257,18 @@ case "$action" in
             rm -f /tmp/Halon.tar.bz2
         fi;
 
-        if [ -e "/usr/local/cpanel/base/3rdparty/sp-enduser-cpanel" ]
+        if [ -e "/usr/local/cpanel/base/frontend/paper_lantern/sp-enduser-cpanel" ]
         then
-            rm -f /usr/local/cpanel/base/3rdparty/sp-enduser-cpanel/index.live.php
-            rm -f /usr/local/cpanel/base/3rdparty/sp-enduser-cpanel/HalonWebmailIcon.png
-            rmdir /usr/local/cpanel/base/3rdparty/sp-enduser-cpanel
+            rm -f /usr/local/cpanel/base/frontend/paper_lantern/sp-enduser-cpanel/index.live.php
+            rm -f /usr/local/cpanel/base/frontend/paper_lantern/sp-enduser-cpanel/HalonWebmailIcon.png
+            rmdir /usr/local/cpanel/base/frontend/paper_lantern/sp-enduser-cpanel
+        fi;
+
+        if [ -e "/usr/local/cpanel/base/webmail/paper_lantern/sp-enduser-cpanel" ]
+        then
+            rm -f /usr/local/cpanel/base/webmail/paper_lantern/sp-enduser-cpanel/index.live.php
+            rm -f /usr/local/cpanel/base/webmail/paper_lantern/sp-enduser-cpanel/HalonWebmailIcon.png
+            rmdir /usr/local/cpanel/base/webmail/paper_lantern/sp-enduser-cpanel
         fi;
 
         if [ -e "/var/cpanel/webmail/webmail_sp-enduser-cpanel.yaml" ]
@@ -301,14 +315,20 @@ case "$action" in
             /usr/local/cpanel/bin/register_appconfig "$CurrentDIR/InstallFiles/HalonWHMPlugin.conf"
         fi;
 
-        if [ ! -e "/usr/local/cpanel/base/3rdparty/sp-enduser-cpanel" ]
+        if [ ! -e "/usr/local/cpanel/base/frontend/paper_lantern/sp-enduser-cpanel" ]
         then
-            mkdir /usr/local/cpanel/base/3rdparty/sp-enduser-cpanel
+            mkdir /usr/local/cpanel/base/frontend/paper_lantern/sp-enduser-cpanel
+        fi;
+
+        if [ ! -e "/usr/local/cpanel/base/webmail/paper_lantern/sp-enduser-cpanel" ]
+        then
+            mkdir /usr/local/cpanel/base/webmail/paper_lantern/sp-enduser-cpanel
         fi;
 
         if [ -e "$CurrentDIR/HalonCPanel" ]
         then
-            cp "$CurrentDIR/HalonCPanel/index.live.php" /usr/local/cpanel/base/3rdparty/sp-enduser-cpanel
+            cp "$CurrentDIR/HalonCPanel/index.live.php" /usr/local/cpanel/base/frontend/paper_lantern/sp-enduser-cpanel
+            cp "$CurrentDIR/HalonCPanel/index.live.php" /usr/local/cpanel/base/webmail/paper_lantern/sp-enduser-cpanel
         fi;
 
         if [ -e "$CurrentDIR/InstallFiles/install.json" ]
@@ -320,7 +340,8 @@ case "$action" in
 
         if [ -e "$CurrentDIR/InstallFiles/HalonWebmailIcon.png" ]
         then
-            cp "$CurrentDIR/InstallFiles/HalonWebmailIcon.png" /usr/local/cpanel/base/3rdparty/sp-enduser-cpanel
+            cp "$CurrentDIR/InstallFiles/HalonWebmailIcon.png" /usr/local/cpanel/base/frontend/paper_lantern/sp-enduser-cpanel
+            cp "$CurrentDIR/InstallFiles/HalonWebmailIcon.png" /usr/local/cpanel/base/webmail/paper_lantern/sp-enduser-cpanel
         fi;
 
         if [ -e "$CurrentDIR/InstallFiles/register.pl" ]

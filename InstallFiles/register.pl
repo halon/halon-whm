@@ -4,9 +4,9 @@ use lib '/usr/local/cpanel';
 use Cpanel::DataStore;
 
 my $app = {
-	url => '/3rdparty/sp-enduser-cpanel/index.live.php',
+	url => '/webmail/paper_lantern/sp-enduser-cpanel/index.live.php',
 	displayname => 'Halon Anti-spam',
-	icon => '/3rdparty/sp-enduser-cpanel/HalonWebmailIcon.png',
+	icon => '/webmail/paper_lantern/sp-enduser-cpanel/HalonWebmailIcon.png',
 };
 
 print "Installing to webmail\n";
