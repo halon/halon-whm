@@ -177,6 +177,7 @@ case "$action" in
         if [ -e "$CurrentDIR/HalonCPanel" ]
         then
             cp "$CurrentDIR/HalonCPanel/index.live.php" /usr/local/cpanel/base/frontend/paper_lantern/sp-enduser-cpanel
+            cp "$CurrentDIR/HalonCPanel/iframe.live.php" /usr/local/cpanel/base/frontend/paper_lantern/sp-enduser-cpanel
             cp "$CurrentDIR/HalonCPanel/index.live.php" /usr/local/cpanel/base/webmail/paper_lantern/sp-enduser-cpanel
         fi;
 
@@ -260,6 +261,7 @@ case "$action" in
         if [ -e "/usr/local/cpanel/base/frontend/paper_lantern/sp-enduser-cpanel" ]
         then
             rm -f /usr/local/cpanel/base/frontend/paper_lantern/sp-enduser-cpanel/index.live.php
+            rm -f /usr/local/cpanel/base/frontend/paper_lantern/sp-enduser-cpanel/iframe.live.php
             rm -f /usr/local/cpanel/base/frontend/paper_lantern/sp-enduser-cpanel/HalonWebmailIcon.png
             rmdir /usr/local/cpanel/base/frontend/paper_lantern/sp-enduser-cpanel
         fi;
@@ -328,6 +330,7 @@ case "$action" in
         if [ -e "$CurrentDIR/HalonCPanel" ]
         then
             cp "$CurrentDIR/HalonCPanel/index.live.php" /usr/local/cpanel/base/frontend/paper_lantern/sp-enduser-cpanel
+            cp "$CurrentDIR/HalonCPanel/iframe.live.php" /usr/local/cpanel/base/frontend/paper_lantern/sp-enduser-cpanel
             cp "$CurrentDIR/HalonCPanel/index.live.php" /usr/local/cpanel/base/webmail/paper_lantern/sp-enduser-cpanel
         fi;
 

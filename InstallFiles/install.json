@@ -5,6 +5,5 @@
 	"name" : "Halon Anti-spam",
 	"type" : "link",
 	"id" : "sp-enduser-cpanel",
-	"uri" : "/frontend/paper_lantern/sp-enduser-cpanel/index.live.php",
-	"target" : "_blank"
+	"uri" : "/frontend/paper_lantern/sp-enduser-cpanel/iframe.live.php"
 }
