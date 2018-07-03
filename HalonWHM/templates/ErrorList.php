@@ -43,7 +43,7 @@
 <script>
     $(document).ready(function() {
         $('#errorList').DataTable({
-            "dom": 't<"pull-right mg_pagination" p>',
+            "dom": 't<"pull-right" p>',
             "ordering": false,
             "info":     false,
             "pageLength": 25
