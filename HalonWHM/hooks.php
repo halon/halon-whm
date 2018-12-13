@@ -1,4 +1,4 @@
-#!/usr/local/cpanel/3rdparty/php/56/bin/php -q
+#!/usr/local/cpanel/3rdparty/php/72/bin/php -q
 
 <?php
 
