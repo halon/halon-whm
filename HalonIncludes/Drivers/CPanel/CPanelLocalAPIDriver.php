@@ -33,17 +33,6 @@ class CPanelLocalAPIDriver extends WHMLocalAPIDriver{
         return $ret['cpanelresult']['result']['data'];
     }
             
-    private function _callAPI1($module,$action,$params = array()){
-        $ret = $this->cpanel->api1($module, $action, $params);
-        
-        if(!empty($ret['cpanelresult']['result']['errors']))
-        {
-            throw new SystemException(implode('/',$ret['cpanelresult']['result']['errors']),0);
-        }
-        
-        return $ret['cpanelresult']['data']['result'];
-    }
-            
     function getDatabaseConfiguration(){
         return parent::getDatabaseConfigurationFromWrapper();
     }    
@@ -62,29 +51,7 @@ class CPanelLocalAPIDriver extends WHMLocalAPIDriver{
     function getCurrentLang(){
         return $this->cpanel->cpanelprint('$lang');
     }
-    
-    function getFooter(){
-        if($this->cpanel->cpanelprint('$theme') == 'paper_lantern')
-        {
-            return $this->cpanel->footer();
-        }
-        else
-        {
-            return $this->_callAPI1('Branding', 'include', array('stdfooter.html'));
-        }
-    }
-    
-    function getHeader(){
-        if($this->cpanel->cpanelprint('$theme') == 'paper_lantern')
-        {
-            return $this->cpanel->header("Halon");
-        }
-        else
-        {
-            return $this->_callAPI1('Branding', 'include', array('stdheader.html'));
-        }
-    }
-    
+
     function getDomainRelPatch($domain)
     {
         $result = $this->_userRequest($this->clientUsername,'DomainLookup', 'getdocroot', array('domain' => $domain));
